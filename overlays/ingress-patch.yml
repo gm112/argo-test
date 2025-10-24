@@ -1,0 +1,6 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: '$(APP_NAME).bluedreamers.com'
+    cert-manager.io/cluster-issuer: letsencrypt-linode
