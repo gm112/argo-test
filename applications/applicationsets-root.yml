@@ -1,31 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: apps
+  name: multi-repo-autodns-env
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
           - name: html-landing
+            env: dev
             repoURL: git@github.com:gm112/html-landing-page.git
             path: manifests
-            namespace: html-landing
+          - name: html-landing
+            env: prod
+            repoURL: git@github.com:gm112/html-landing-page.git
+            path: manifests
   template:
     metadata:
-      name: '{{name}}'
+      name: '{{name}}-{{env}}'
     spec:
       project: default
       source:
         repoURL: '{{repoURL}}'
         targetRevision: HEAD
         path: '{{path}}'
+        kustomize:
+          commonAnnotations:
+            external-dns.alpha.kubernetes.io/hostname: '{{name}}.{{env}}.bluedreamers.com'
+            cert-manager.io/cluster-issuer: letsencrypt-linode
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
+        namespace: '{{name}}-{{env}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
-          - CreateNamespace=true   # ✅ auto-create namespace if missing
+          - CreateNamespace=true
