@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: multi-repo-autodns-env
+  name: apps
   namespace: argocd
 spec:
   generators:
@@ -15,6 +15,7 @@ spec:
             env: prod
             repoURL: git@github.com:gm112/html-landing-page.git
             path: manifests
+
   template:
     metadata:
       name: '{{name}}-{{env}}'
@@ -28,9 +29,21 @@ spec:
           commonAnnotations:
             external-dns.alpha.kubernetes.io/hostname: '{{name}}.{{env}}.bluedreamers.com'
             cert-manager.io/cluster-issuer: letsencrypt-linode
+          patches:
+            - target:
+                kind: Ingress
+              patch: |-
+                - op: replace
+                  path: /spec/rules/0/host
+                  value: "{{name}}.{{env}}.bluedreamers.com"
+                - op: replace
+                  path: /spec/tls/0/hosts/0
+                  value: "{{name}}.{{env}}.bluedreamers.com"
+
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{name}}-{{env}}'
+
       syncPolicy:
         automated:
           prune: true
