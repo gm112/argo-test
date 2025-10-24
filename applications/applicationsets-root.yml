@@ -27,6 +27,7 @@ spec:
         kustomize:
           commonAnnotations:
             external-dns.alpha.kubernetes.io/hostname: '{{name}}.{{env}}.bluedreamers.com'
+            external-dns.alpha.kubernetes.io/target: 172.238.166.137
             cert-manager.io/cluster-issuer: letsencrypt-linode
       destination:
         server: https://kubernetes.default.svc
