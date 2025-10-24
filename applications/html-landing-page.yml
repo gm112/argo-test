@@ -6,7 +6,7 @@ metadata:
 spec:
   generators:
     - git:
-        repoURL: git@github.com:me/html-landing-page.git
+        repoURL: git@github.com:gm112/html-landing-page.git
         revision: HEAD
         directories:
           - path: "manifests"   # each directory here could be an app
