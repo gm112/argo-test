@@ -9,7 +9,7 @@ spec:
         repoURL: git@github.com:gm112/html-landing-page.git
         revision: HEAD
         directories:
-          - path: "manifests"   # each directory here could be an app
+          - path: "manifests"
   template:
     metadata:
       name: '{{path.basename}}'
@@ -21,8 +21,10 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: html-landing
+        namespace: '{{path.basename}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true 
