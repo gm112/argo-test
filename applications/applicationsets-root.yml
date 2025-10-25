@@ -29,7 +29,7 @@ spec:
           commonAnnotations:
             external-dns.alpha.kubernetes.io/hostname: '{{name}}.{{env}}.bluedreamers.com'
             cert-manager.io/cluster-issuer: letsencrypt-linode
-            env: '{{env}}'
+            ENV: '{{env}}'
           patches:
             - target:
                 kind: Ingress
